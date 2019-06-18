@@ -1,0 +1,17 @@
+Feature: simple osquery attack (sanity check)
+
+  Background:
+    Given "osquery" is installed
+   # And the following profile:
+   #   | name     | value     |
+   #   | hostname | localhost |
+
+  Scenario: Verify server is available
+    When I launch an "osquery" attack with:
+      """
+      osqueryi --csv 'SELECT COUNT(*) from firefox_addons;'
+      """
+    Then the output should contain:
+      """
+      COUNT(*) =
+      """

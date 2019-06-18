@@ -36,18 +36,6 @@ RUN gem install rake \
 # Install Attack tools
 WORKDIR /opt
 
-# osquery!
-ARG OSQUERY_VERSION=3.3.2
-ARG OSQUERY_HASH=05b0b15bd44e6a85813dd92a567c371031938aedbcd2e64d32229a3ca0c2d509
-
-# shasum expects two spaces or space* for the shasum file
-RUN curl "https://pkg.osquery.io/linux/osquery-${OSQUERY_VERSION}_1.linux_x86_64.tar.gz" \
-        -o osquery.tar.gz \
-      && echo "${OSQUERY_HASH} *osquery.tar.gz" > check.sha \
-      && shasum -a 256 -c check.sha \
-      && tar xzvf osquery.tar.gz > /dev/null \
-      && mv usr/bin/* /usr/local/bin
-
 # arachni
 RUN wget https://github.com/Arachni/arachni/releases/download/v1.5.1/${ARACHNI_VERSION}-linux-x86_64.tar.gz && \
     tar xzvf ${ARACHNI_VERSION}-linux-x86_64.tar.gz > /dev/null && \

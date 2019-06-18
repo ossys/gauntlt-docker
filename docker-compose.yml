@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+  gauntlt:
+    network_mode: 'host'
+    build: .
+  osquerytls:
+    build:
+      context: .
+      dockerfile: TLS-Dockerfile
+    ports:
+      - '4999:5000'

@@ -1,0 +1,17 @@
+Feature: simple osquery attack (sanity check)
+
+  Background:
+    Given "osquery" is installed
+   # And the following profile:
+   #   | name     | value     |
+   #   | hostname | localhost |
+
+  Scenario: Verify server is available
+    When I launch an "osquery" attack with:
+      """
+      osqueryi --csv 'SELECT port, address from listening_ports;'
+      """
+    Then the output should not contain:
+      """
+      1111
+      """

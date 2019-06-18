@@ -1,0 +1,23 @@
+FROM ruby:2.6.3-alpine3.9
+MAINTAINER zah@andrewzah.com
+
+RUN apk add git \
+  && apk add --no-cache --virtual .build-deps \
+    g++ musl-dev build-base libstdc++ gcc openssl-dev \
+  && echo 'gem: --no-rdoc --no-ri' > /etc/gemrc \
+  && gem install sinatra sinatra-contrib thin \
+  && apk del .build-deps
+
+# Set up TLS Server for OsQuery
+WORKDIR /opt
+
+ARG HASH=4abfc7395c8b80cc57d984342da9fe8f9239fed6
+RUN git clone https://github.com/azah/osquery-sinatra.git \
+  && cd osquery-sinatra \
+  && git checkout ${HASH}
+
+COPY ./server.crt /opt/osquery-sinatra/server.crt
+COPY ./server.key /opt/osquery-sinatra/server.key
+
+CMD [ "ruby", "/opt/osquery-sinatra/app.rb" ]
+EXPOSE 5000
